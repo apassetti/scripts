@@ -4,10 +4,10 @@ import subprocess
 
 # Path to the GFF3 file
 gff3_file = "~/src/pseudogenes/data/gencode.v46.annotation.gff3.gz"
-output_file = "~/src/pseudogenes/genes_lines.txt"
+output_file = "~/src/pseudogenes/protein_coding_lines.txt"
 
 # Create output file
-cmd = f'~/src/pseudogenes/genes_lines.txt'
+cmd = f'~/src/pseudogenes/protein_coding_lines.txt'
 
 # Expand the ~ to the full path
 output_file = os.path.expanduser(output_file)
@@ -15,7 +15,7 @@ output_file = os.path.expanduser(output_file)
 # Function to process a chromosome and append the count to the output file
 def process_chromosome(chromosome):
     # Build the command
-    cmd = f'gunzip -c {gff3_file} | grep -v "#" | awk \'$1 == "chr{chromosome}" && $3 == "gene"\' | wc -l'
+    cmd = f'gunzip -c {gff3_file} | grep -v "#" | awk \'$1 == "chr{chromosome}" && $3 == "gene" && $9 ~ "protein_coding"\' | wc -l'
     
     # Execute the command
     count = subprocess.check_output(cmd, shell=True).decode('utf-8').strip()
