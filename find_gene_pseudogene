@@ -1,0 +1,1 @@
+gunzip -c data/gencode.v46.annotation.gff3.gz | grep -v "#" | awk '$3 == "gene" && $9 ~ "FKBP1A"' | tee FKBP1A.txt |less -S -x 15
