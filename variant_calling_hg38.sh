@@ -2,7 +2,6 @@
 
 # Script to call germline variants in a human WGS paired end reads 2 X 100bp
 # Following GATK4 best practices workflow - https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-
-# This script is for demonstration purposes only
 
 #if false
 #then
