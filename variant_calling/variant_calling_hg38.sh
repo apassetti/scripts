@@ -4,24 +4,16 @@
 # Following GATK4 best practices workflow - https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-
 # This script is for demonstration purposes only
 
-#if false
-#then
-
 ###################################################### DOWNLOAD STEP ####################################################################
 
-
 # make directories
-mkdir CFTR
-mkdir CFTR/Aligned CFTR/Data CFTR/Reads CFTR/Results 
+folder="/Users/andreapassetti/src/CFTR"
 
-
-# download data
-#wget -P /Users/andreapassetti/Documents/Bioinformatics/CFTR/Reads 	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/005/SRR2136533/SRR2136533_1.fastq.gz
-#wget -P /Users/andreapassetti/Documents/Bioinformatics/CFTR/Reads 	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR522/005/SRR2136533/SRR2136533_2.fastq.gz
+mkdir ${folder}
+mkdir ${folder}/Aligned ${folder}/Data ${folder}/Reads ${folder}/Results 
 
 prefetch SRR2136533
-fasterq-dump -x SRR2136533 -O CFTR/Reads
-
+fasterq-dump -x SRR2136533 -O ${folder}/Reads
 
 ###################################################### VARIANT CALLING STEPS ####################################################################
 
@@ -33,9 +25,6 @@ reads="/Users/andreapassetti/Documents/Bioinformatics/CFTR/Reads"
 results="/Users/andreapassetti/Documents/Bioinformatics/CFTR/Results"
 data="/Users/andreapassetti/Documents/Bioinformatics/CFTR/Data"
 
-#if false
-#then
-
 # -------------------       
 # STEP 1: QC - Run fastqc 
 # -------------------
@@ -45,9 +34,6 @@ echo "STEP 1: QC - Run fastqc"
 fastqc ${reads}/SRR2136533_1.fastq -o ${reads}/
 fastqc ${reads}/SRR2136533_2.fastq -o ${reads}/
 
-# No trimming required, quality looks okay.
-
-#fi
 
 # --------------------------------------
 # STEP 2: Map to reference using BWA-MEM
@@ -56,13 +42,11 @@ fastqc ${reads}/SRR2136533_2.fastq -o ${reads}/
 echo "STEP 2: Map to reference using BWA-MEM"
 
 # BWA index reference 
-#bwa index ${ref}
+bwa index ${ref}
 
 
 # BWA alignment
 bwa mem -t 8 -R "@RG\tID:SRR2136533\tPL:ILLUMINA\tSM:SRR2136533" ${ref} ${reads}/SRR2136533_1.fastq ${reads}/SRR2136533_2.fastq > ${aligned_reads}/SRR2136533.paired.sam
-
-
 
 # -----------------------------------------
 # STEP 3: Mark Duplicates and Sort - GATK4
@@ -71,8 +55,6 @@ bwa mem -t 8 -R "@RG\tID:SRR2136533\tPL:ILLUMINA\tSM:SRR2136533" ${ref} ${reads}
 echo "STEP 3: Mark Duplicates and Sort - GATK4"
 
 gatk MarkDuplicatesSpark -I ${aligned_reads}/SRR2136533.paired.sam -O ${aligned_reads}/SRR2136533_sorted_dedup_reads.bam
-
-
 
 # ----------------------------------
 # STEP 4: Base quality recalibration
@@ -88,7 +70,6 @@ gatk BaseRecalibrator -I ${aligned_reads}/SRR2136533_sorted_dedup_reads.bam -R $
 gatk ApplyBQSR -I ${aligned_reads}/SRR2136533_sorted_dedup_reads.bam -R ${ref} --bqsr-recal-file ${data}/recal_data.table -O ${aligned_reads}/SRR2136533_sorted_dedup_bqsr_reads.bam 
 
 
-
 # -----------------------------------------------
 # STEP 5: Collect Alignment & Insert Size Metrics
 # -----------------------------------------------
@@ -100,11 +81,9 @@ gatk CollectAlignmentSummaryMetrics -R ${ref} -I ${aligned_reads}/SRR2136533_sor
 gatk CollectInsertSizeMetrics INPUT=${aligned_reads}/SRR2136533_sorted_dedup_bqsr_reads.bam OUTPUT=${aligned_reads}/insert_size_metrics.txt HISTOGRAM_FILE=${aligned_reads}/insert_size_histogram.pdf
 
 
-
 # ----------------------------------------------
 # STEP 6: Call Variants - gatk haplotype caller
 # ----------------------------------------------
-
 
 echo "STEP 6: Call Variants - gatk haplotype caller"
 
@@ -116,9 +95,6 @@ gatk HaplotypeCaller -R ${ref} -I ${aligned_reads}/SRR2136533_sorted_dedup_bqsr_
 
 gatk SelectVariants -R ${ref} -V ${results}/raw_variants.vcf --select-type SNP -O ${results}/raw_snps.vcf
 gatk SelectVariants -R ${ref} -V ${results}/raw_variants.vcf --select-type INDEL -O ${results}/raw_indels.vcf
-
-#fi
-
 
 
 # -------------------
@@ -143,7 +119,6 @@ gatk VariantFiltration \
 	-genotype-filter-name "GQ_filter"
 
 
-
 # Filter INDELS
 gatk VariantFiltration \
 	-R ${ref} \
@@ -158,9 +133,6 @@ gatk VariantFiltration \
 	-genotype-filter-name "GQ_filter"
 
 
-
-
-
 # Select Variants that PASS filters
 gatk SelectVariants \
 	--exclude-filtered \
@@ -172,7 +144,6 @@ gatk SelectVariants \
 	--exclude-filtered \
 	-V ${results}/filtered_indels.vcf \
 	-O ${results}/analysis-ready-indels.vcf
-
 
 
 # to exclude variants that failed genotype filters
