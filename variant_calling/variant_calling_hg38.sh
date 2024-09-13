@@ -9,7 +9,7 @@
 folder="/Users/andreapassetti/src/CFTR"
 
 mkdir ${folder}
-mkdir ${folder}/Aligned ${folder}/Data ${folder}/Reads ${folder}/Results 
+mkdir ${folder}/Aligned ${folder}/Data ${folder}/Reads ${folder}/Results ${folder}/Quality 
 
 prefetch SRR2136533
 fasterq-dump -x SRR2136533 -O ${folder}/Reads
@@ -17,12 +17,13 @@ fasterq-dump -x SRR2136533 -O ${folder}/Reads
 ###################################################### VARIANT CALLING STEPS ####################################################################
 
 # directories
-ref="/Users/andreapassetti/Documents/Bioinformatics/Genome/hg38.fa"
-known_sites="/Users/andreapassetti/Documents/Bioinformatics/Genome/Homo_sapiens_assembly38.dbsnp138.vcf"
-aligned_reads="/Users/andreapassetti/Documents/Bioinformatics/CFTR/Aligned"
-reads="/Users/andreapassetti/Documents/Bioinformatics/CFTR/Reads"
-results="/Users/andreapassetti/Documents/Bioinformatics/CFTR/Results"
-data="/Users/andreapassetti/Documents/Bioinformatics/CFTR/Data"
+ref="/Users/andreapassetti/Reference/Homo_sapiens_assembly38.fasta"
+known_sites="/Users/andreapassetti/Reference/resources_broad_hg38_v0_Homo_sapiens_assembly38.dbsnp138.vcf"
+aligned_reads="/Users/andreapassetti/src/CFTR/Aligned"
+reads="/Users/andreapassetti/src/CFTR/Reads"
+results="/Users/andreapassetti/src/CFTR/Results"
+data="/Users/andreapassetti/src/CFTR/Data"
+quality="/Users/andreapassetti/src/CFTR/Quality"
 
 # -------------------       
 # STEP 1: QC - Run fastqc 
@@ -30,8 +31,8 @@ data="/Users/andreapassetti/Documents/Bioinformatics/CFTR/Data"
 
 echo "STEP 1: QC - Run fastqc"
 
-fastqc ${reads}/SRR2136533_1.fastq -o ${reads}/
-fastqc ${reads}/SRR2136533_2.fastq -o ${reads}/
+fastqc ${reads}/SRR2136533_1.fastq -o ${quality}/
+fastqc ${reads}/SRR2136533_2.fastq -o ${quality}/
 
 
 # --------------------------------------
@@ -42,7 +43,7 @@ echo "STEP 2: Map to reference using BWA-MEM"
 
 # BWA index reference 
 bwa index ${ref}
-
+samtools faidx ${ref}
 
 # BWA alignment
 bwa mem -t 8 -R "@RG\tID:SRR2136533\tPL:ILLUMINA\tSM:SRR2136533" ${ref} ${reads}/SRR2136533_1.fastq ${reads}/SRR2136533_2.fastq > ${aligned_reads}/SRR2136533.paired.sam
