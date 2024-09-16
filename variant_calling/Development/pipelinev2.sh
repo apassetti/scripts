@@ -48,8 +48,13 @@ checkpoint=$(get_checkpoint)
 checkpoint=${checkpoint:-0}
 
 # Download data
-prefetch SRR2136533
-fasterq-dump -x SRR2136533 -O ${folder}/Reads
+if [ "$checkpoint" -le 1 ]; then
+    echo "Downloading data"
+    prefetch SRR2136533
+    fasterq-dump -x SRR2136533 -O ${folder}/Reads
+
+    set_checkpoint 2
+fi
 
 ###################################################### VARIANT CALLING STEPS ####################################################################
 
@@ -66,11 +71,11 @@ quality="${folder}/Quality"
 # STEP 1: QC - Run fastqc 
 # -------------------
 
-if [ "$checkpoint" -le 1 ]; then
+if [ "$checkpoint" -le 2 ]; then
     echo "STEP 1: QC - Run fastqc"
     parallel --eta fastqc {} -o ${quality}/ ::: ${reads}/SRR2136533_1.fastq ${reads}/SRR2136533_2.fastq
     
-    set_checkpoint 2 
+    set_checkpoint 3
 fi
 
 
@@ -78,7 +83,7 @@ fi
 # STEP 2: Map to reference using BWA-MEM
 # --------------------------------------
 
-if [ "$checkpoint" -le 2 ]; then
+if [ "$checkpoint" -le 3 ]; then
     echo "STEP 2: Map to reference using BWA-MEM"
     # BWA index reference 
     bwa index ${ref}
@@ -87,7 +92,7 @@ if [ "$checkpoint" -le 2 ]; then
     # BWA alignment with 8 threads
     bwa mem -t 8 -R "@RG\tID:SRR2136533\tPL:ILLUMINA\tSM:SRR2136533" ${ref} ${reads}/SRR2136533_1.fastq ${reads}/SRR2136533_2.fastq > ${aligned_reads}/SRR2136533.paired.sam
     
-    set_checkpoint 3 
+    set_checkpoint 4 
 fi
 
 
@@ -95,11 +100,11 @@ fi
 # STEP 3: Mark Duplicates and Sort - GATK4
 # -----------------------------------------
 
-if [ "$checkpoint" -le 3 ]; then
+if [ "$checkpoint" -le 4 ]; then
     echo "STEP 3: Mark Duplicates and Sort - GATK4"
     gatk MarkDuplicatesSpark -I ${aligned_reads}/SRR2136533.paired.sam -O ${aligned_reads}/SRR2136533_sorted_dedup_reads.bam
     
-    set_checkpoint 4 
+    set_checkpoint 5
 fi
 
 
@@ -107,7 +112,7 @@ fi
 # STEP 4: Base quality recalibration
 # ----------------------------------
 
-if [ "$checkpoint" -le 4 ]; then
+if [ "$checkpoint" -le 5 ]; then
     echo "STEP 4: Base quality recalibration"
 
     # 1. Build the model
@@ -116,7 +121,7 @@ if [ "$checkpoint" -le 4 ]; then
     # 2. Apply the model to adjust the base quality scores
     gatk ApplyBQSR -I ${aligned_reads}/SRR2136533_sorted_dedup_reads.bam -R ${ref} --bqsr-recal-file ${data}/recal_data.table -O ${aligned_reads}/SRR2136533_sorted_dedup_bqsr_reads.bam 
     
-    set_checkpoint 5
+    set_checkpoint 6
 fi
 
 
@@ -124,12 +129,12 @@ fi
 # STEP 5: Collect Alignment & Insert Size Metrics
 # -----------------------------------------------
 
-if [ "$checkpoint" -le 5 ]; then
+if [ "$checkpoint" -le 6 ]; then
     echo "STEP 5: Collect Alignment & Insert Size Metrics"
 
     gatk CollectAlignmentSummaryMetrics -R ${ref} -I ${aligned_reads}/SRR2136533_sorted_dedup_bqsr_reads.bam -O ${aligned_reads}/alignment_metrics.txt
     gatk CollectInsertSizeMetrics INPUT=${aligned_reads}/SRR2136533_sorted_dedup_bqsr_reads.bam OUTPUT=${aligned_reads}/insert_size_metrics.txt HISTOGRAM_FILE=${aligned_reads}/insert_size_histogram.pdf
-    set_checkpoint 6
+    set_checkpoint 7
 fi
 
 
@@ -137,7 +142,7 @@ fi
 # STEP 6: Call Variants - gatk haplotype caller (parallelized)
 # ----------------------------------------------
 
-if [ "$checkpoint" -le 6 ]; then
+if [ "$checkpoint" -le 7 ]; then
     echo "STEP 6: Call Variants - gatk haplotype caller"
 
     # Parallel variant calling using multiple regions (genome is large, splitting it speeds things up)
@@ -153,7 +158,7 @@ if [ "$checkpoint" -le 6 ]; then
     # extract SNPs & INDELS
     gatk SelectVariants -R ${ref} -V ${results}/raw_variants.vcf --select-type SNP -O ${results}/raw_snps.vcf
     gatk SelectVariants -R ${ref} -V ${results}/raw_variants.vcf --select-type INDEL -O ${results}/raw_indels.vcf
-    set_checkpoint 7
+    set_checkpoint 8
 fi
 
 
@@ -161,7 +166,7 @@ fi
 # STEP 7: Filter Variants - GATK4
 # -------------------
 
-if [ "$checkpoint" -le 7 ]; then
+if [ "$checkpoint" -le 8 ]; then
     echo "STEP 7: Filtering Variants"
     # Filter SNPs
     gatk VariantFiltration \
@@ -209,6 +214,6 @@ if [ "$checkpoint" -le 7 ]; then
     SnpSift filter "(ANN[*].IMPACT = 'HIGH') | (ANN[*].IMPACT = 'MODERATE')" ${results}/analysis-ready-snps-annotated.vcf > ${results}/analysis-ready-snps-highImpact.vcf
     SnpSift filter "(ANN[*].IMPACT = 'HIGH') | (ANN[*].IMPACT = 'MODERATE')" ${results}/analysis-ready-indels-annotated.vcf > ${results}/analysis-ready-indels-highImpact.vcf
 
-    set_checkpoint 8 # Final checkpoint (script completed)
+    set_checkpoint 9 # Final checkpoint (script completed)
 fi
 echo "Script completed."
