@@ -5,8 +5,12 @@
 
 ###################################################### DOWNLOAD STEP ####################################################################
 
+# Get the current home folder dynamically
+home_dir=$HOME
+echo "Current home directory: $home_dir"
+
 # Make directories
-folder="/Users/andreapassetti/src/CFTR"
+folder="${home_dir}/src/CFTR"
 mkdir -p ${folder}/Aligned ${folder}/Data ${folder}/Reads ${folder}/Results ${folder}/Quality 
 
 # Log file path
@@ -28,8 +32,8 @@ fasterq-dump -x SRR2136533 -O ${folder}/Reads
 ###################################################### VARIANT CALLING STEPS ####################################################################
 
 # directories
-ref="/Users/andreapassetti/Reference/Homo_sapiens_assembly38.fasta"
-known_sites="/Users/andreapassetti/Reference/resources_broad_hg38_v0_Homo_sapiens_assembly38.dbsnp138.vcf"
+ref="${home_dir}/Reference/Homo_sapiens_assembly38.fasta"
+known_sites="${home_dir}/Reference/resources_broad_hg38_v0_Homo_sapiens_assembly38.dbsnp138.vcf"
 aligned_reads="${folder}/Aligned"
 reads="${folder}/Reads"
 results="${folder}/Results"
