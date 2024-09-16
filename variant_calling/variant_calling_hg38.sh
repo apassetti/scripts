@@ -18,7 +18,7 @@ fasterq-dump -x SRR2136533 -O ${folder}/Reads
 
 # directories
 ref="/Users/andreapassetti/Reference/Homo_sapiens_assembly38.fasta"
-known_sites="/Users/andreapassetti/Reference/resources_broad_hg38_v0_Homo_sapiens_assembly38.dbsnp138.vcf"
+known_sites="/Users/andreapassetti/Reference/Homo_sapiens_assembly38.dbsnp138.vcf"
 aligned_reads="/Users/andreapassetti/src/CFTR/Aligned"
 reads="/Users/andreapassetti/src/CFTR/Reads"
 results="/Users/andreapassetti/src/CFTR/Results"

@@ -33,7 +33,7 @@ fasterq-dump -x SRR2136533 -O ${folder}/Reads
 
 # directories
 ref="${home_dir}/Reference/Homo_sapiens_assembly38.fasta"
-known_sites="${home_dir}/Reference/resources_broad_hg38_v0_Homo_sapiens_assembly38.dbsnp138.vcf"
+known_sites="${home_dir}/Reference/Homo_sapiens_assembly38.dbsnp138.vcf"
 aligned_reads="${folder}/Aligned"
 reads="${folder}/Reads"
 results="${folder}/Results"
