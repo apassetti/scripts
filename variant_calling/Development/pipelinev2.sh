@@ -12,6 +12,7 @@ echo "Current home directory: $home_dir"
 # Make directories
 folder="${home_dir}/src/CFTR"
 mkdir -p ${folder}/Aligned ${folder}/Data ${folder}/Reads ${folder}/Results ${folder}/Quality 
+touch ${folder}/checkpoint.txt
 
 # Log file path
 log_file="${folder}/pipeline.log"
@@ -26,7 +27,7 @@ error_exit() {
 trap 'error_exit $LINENO' ERR
 
 # Define checkpoint file
-CHECKPOINT_FILE="${folder}checkpoint.txt"
+CHECKPOINT_FILE="${folder}/checkpoint.txt"
 
 # Function to set the checkpoint
 set_checkpoint() {
