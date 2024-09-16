@@ -99,7 +99,7 @@ if [ "$checkpoint" -le 3 ]; then
     echo "STEP 3: Mark Duplicates and Sort - GATK4"
     gatk MarkDuplicatesSpark -I ${aligned_reads}/SRR2136533.paired.sam -O ${aligned_reads}/SRR2136533_sorted_dedup_reads.bam
     
-    set_checkpoint4 
+    set_checkpoint 4 
 fi
 
 
@@ -116,7 +116,7 @@ if [ "$checkpoint" -le 4 ]; then
     # 2. Apply the model to adjust the base quality scores
     gatk ApplyBQSR -I ${aligned_reads}/SRR2136533_sorted_dedup_reads.bam -R ${ref} --bqsr-recal-file ${data}/recal_data.table -O ${aligned_reads}/SRR2136533_sorted_dedup_bqsr_reads.bam 
     
-    set_checkpoint5
+    set_checkpoint 5
 fi
 
 
@@ -129,7 +129,7 @@ if [ "$checkpoint" -le 5 ]; then
 
     gatk CollectAlignmentSummaryMetrics -R ${ref} -I ${aligned_reads}/SRR2136533_sorted_dedup_bqsr_reads.bam -O ${aligned_reads}/alignment_metrics.txt
     gatk CollectInsertSizeMetrics INPUT=${aligned_reads}/SRR2136533_sorted_dedup_bqsr_reads.bam OUTPUT=${aligned_reads}/insert_size_metrics.txt HISTOGRAM_FILE=${aligned_reads}/insert_size_histogram.pdf
-    set_checkpoint6
+    set_checkpoint 6
 fi
 
 
@@ -153,7 +153,7 @@ if [ "$checkpoint" -le 6 ]; then
     # extract SNPs & INDELS
     gatk SelectVariants -R ${ref} -V ${results}/raw_variants.vcf --select-type SNP -O ${results}/raw_snps.vcf
     gatk SelectVariants -R ${ref} -V ${results}/raw_variants.vcf --select-type INDEL -O ${results}/raw_indels.vcf
-    set_checkpoint7
+    set_checkpoint 7
 fi
 
 
