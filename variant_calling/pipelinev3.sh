@@ -8,7 +8,7 @@
 home_dir="${HOME}"
 folder="${home_dir}/src/CFTR"
 ref="${home_dir}/Reference/Homo_sapiens_assembly38.fasta"
-known_sites="${home_dir}/Reference/resources_broad_hg38_v0_Homo_sapiens_assembly38.dbsnp138.vcf"
+known_sites="${home_dir}/Reference/Homo_sapiens_assembly38.dbsnp138.vcf"
 threads=8  # Default number of threads for parallelization
 
 # Allow user to override the parameters via command-line arguments
