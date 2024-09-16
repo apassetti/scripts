@@ -43,8 +43,9 @@ get_checkpoint() {
     fi
 }
 
-# Get the last checkpoint
+# Get the last checkpoint and set it to 0 if empty
 checkpoint=$(get_checkpoint)
+checkpoint=${checkpoint:-0}
 
 # Download data
 prefetch SRR2136533
