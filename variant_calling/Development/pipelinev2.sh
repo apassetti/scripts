@@ -147,12 +147,11 @@ if [ "$checkpoint" -le 7 ]; then
 
     # Parallel variant calling using multiple regions (genome is large, splitting it speeds things up)
     gatk HaplotypeCaller \
-        -R ${ref} \
-        -I ${aligned_reads}/SRR2136533_sorted_dedup_bqsr_reads.bam \
-        -O ${results}/raw_variants.vcf \
-        -ERC GVCF \
-        -L chr1 -L chr2 -L chr3 -L chr4 -L chr5 -L chr6 -L chr7 -L chr8 -L chr9 -L chr10 -L chr11 \
-        --native-pair-hmm-threads 8
+    -R ${ref} \
+    -I ${aligned_reads}/SRR2136533_sorted_dedup_bqsr_reads.bam \
+    -O ${results}/raw_variants.vcf \
+    -ERC GVCF \
+    --native-pair-hmm-threads 8
 
 
     # extract SNPs & INDELS

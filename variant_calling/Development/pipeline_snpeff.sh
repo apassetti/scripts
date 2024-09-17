@@ -151,8 +151,8 @@ cat ${results}/analysis-ready-snps.vcf|grep -v -E "DP_filter|GQ_filter" > ${resu
 cat ${results}/analysis-ready-indels.vcf| grep -v -E "DP_filter|GQ_filter" > ${results}/analysis-ready-indels-filteredGT.vcf
 
 # Annotate VCF with functional information
-snpEff -v GRCh38.99 ${results}/analysis-ready-snps-filteredGT.vcf > ${results}/analysis-ready-snps-annotated.vcf
-snpEff -v GRCh38.99 ${results}/analysis-ready-indels-filteredGT.vcf > ${results}/analysis-ready-indels-annotated.vcf
+snpEff -Xmx8g -v GRCh38.99 ${results}/analysis-ready-snps-filteredGT.vcf > ${results}/analysis-ready-snps-annotated.vcf
+snpEff -Xmx8g -v GRCh38.99 ${results}/analysis-ready-indels-filteredGT.vcf > ${results}/analysis-ready-indels-annotated.vcf
 
 # Filter annotated variants
 SnpSift filter "(ANN[*].IMPACT = 'HIGH') | (ANN[*].IMPACT = 'MODERATE')" ${results}/analysis-ready-snps-annotated.vcf > ${results}/analysis-ready-snps-highImpact.vcf
