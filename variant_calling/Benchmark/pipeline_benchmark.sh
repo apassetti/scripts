@@ -6,7 +6,7 @@
 # Folders
 folder="/Users/andreapassetti/src/synthetic"
 Data="${folder}/Data"
-Ref="/Users/andreapassetti/Reference/hg38/"
+Ref="/Users/andreapassetti/Reference/hg38"
 Genome="${Ref}/hg38_chr7.fasta"
 Analysis="${folder}/Analysis"
 Results="${folder}/Results"
@@ -40,7 +40,8 @@ gatk BaseRecalibrator -I ${Analysis}/Alignment/bench_chr7_dedup_reads.bam \
 
 # 2. Apply the model
 gatk ApplyBQSR -I ${Analysis}/Alignment/bench_chr7_dedup_reads.bam \
-    -R ${Genome} --bqsr-recal-file ${Analysis}/Alignment/recal_data.table \
+    -R ${Genome} \
+    --bqsr-recal-file ${Analysis}/Alignment/recal_data.table \
     -O ${Analysis}/Alignment/bench_chr7_sorted_dedup_recal_reads.bam
 
 # 3. Analyze covarities
