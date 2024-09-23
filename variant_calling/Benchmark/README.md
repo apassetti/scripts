@@ -16,7 +16,7 @@ Questa pipeline è relativa alla creazione di read sintetiche utilizzando il pro
 ## Esempio di comando
 
 ```bash
-dwgsim -1 100 -2 100 -r 0.001 -R 0.15 -X 0.3 -y 0.02 -z 100 -N 1000000 hg38_chr7.fasta chr7_reads
+dwgsim -1 100 -2 100 -r 0.001 -R 0.15 -X 0.3 -y 0.02 -z 100 -N 1000000 hg38_chr7.fasta bench_chr7
 ```
 
 ## Specifica dei comandi
@@ -40,6 +40,4 @@ Il comando genererà file di read sintetiche che possono essere utilizzati per u
 ## Contatti
 
 Per ulteriori informazioni, contattare [Andrea_Passetti] all'indirizzo [andrea.passetti91@gmail.com].
-
-# Pipeline
 

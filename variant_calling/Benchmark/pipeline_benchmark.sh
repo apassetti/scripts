@@ -14,8 +14,9 @@ Results="${folder}/Results"
 mkdir -p ${Analysis}
 mkdir -p ${Analysis}/{Alignment,VariantCalling}
 
-if false
-then
+gunzip ${Data}/bench_chr7.bwa.read1.fastq.gz
+gunzip ${Data}/bench_chr7.bwa.read2.fastq.gz
+
 
 # Indexing reference genome
 bwa index ${Genome}
@@ -23,7 +24,7 @@ samtools faidx ${Genome}
 samtools dict ${Genome} > ${Ref}/hg38_chr7.dict
 
 # Map to reference genome using BWA-MEM
-bwa mem -t 8 -R "@RG\tID:bench\tSM:sample\tPL:ILLUMINA" ${Genome} ${Data}/chr7_reads.bwa.read1.fastq ${Data}/chr7_reads.bwa.read2.fastq > ${Analysis}/Alignment/bench_chr7.sam 
+bwa mem -t 8 -R "@RG\tID:bench\tSM:sample\tPL:ILLUMINA" ${Genome} ${Data}/bench_chr7.bwa.read1.fastq ${Data}/bench_chr7.bwa.read2.fastq > ${Analysis}/Alignment/bench_chr7.sam 
 
 # Mark duplicates (GATK)
 # MarkDuplicatesSpark performs both the duplicate marking step and the sort step
@@ -64,7 +65,6 @@ gatk --java-options "-Xmx8g" HaplotypeCaller \
     -I ${Analysis}/Alignment/bench_chr7_sorted_dedup_recal.bam \
     -O ${Analysis}/VariantCalling/bench_chr7.vcf.gz \
     --native-pair-hmm-threads 8
-fi
 
 # Annotate variants with functotator
 gatk Funcotator \
