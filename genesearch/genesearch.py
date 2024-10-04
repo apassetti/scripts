@@ -27,5 +27,12 @@ def main():
     except subprocess.CalledProcessError as e:
         sys.exit(f"An error occurred while executing the command: {e}")
 
+    # Ask if user wants to search again
+    search_again = input("Do you want to search for another gene? (yes/no): ").strip().lower()
+    if search_again == "yes":
+        main()
+    else:
+        sys.exit("Goodbye!")
+
 if __name__ == "__main__":
     main()
