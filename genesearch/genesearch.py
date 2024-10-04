@@ -15,7 +15,7 @@ def main():
         sys.exit(f"Reference file {ref_file} does not exist")
 
     # Ask for gene name
-    gene_name = input("Enter gene name: ").strip()
+    gene_name = input("Enter gene name: ").strip().upper()
 
     if not gene_name:
         sys.exit("Gene name cannot be empty")
