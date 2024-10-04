@@ -8,7 +8,12 @@ import shlex
 # Define reference and input files
 home_dir = os.path.expanduser("~")
 ref_file = os.path.join(home_dir, "Reference", "hg38", "gencode.v46.annotation.gff3.gz")
-save_fle = os.path.join(home_dir, "Documents")
+save_file = os.path.join(home_dir, "Documents", "Genes")
+
+# Create save directory if it does not exist
+if not os.path.exists(save_file):
+    os.makedirs(save_file)
+
 
 def main():
     # Check if reference file exists
@@ -22,16 +27,16 @@ def main():
         sys.exit("Gene name cannot be empty")
 
     # Execute bash command
-    command = f"gunzip -c {shlex.quote(ref_file)} | grep -v '#' | awk '$3 == \"gene\" && $9 ~ \"gene_name={gene_name}\"' | tee {shlex.quote(save_fle)}/{shlex.quote(gene_name)}.txt | less -S -x 15"
+    command = f"gunzip -c {shlex.quote(ref_file)} | grep -v '#' | awk '$3 == \"gene\" && $9 ~ \"gene_name={gene_name}\"' | tee {shlex.quote(save_file)}/{shlex.quote(gene_name)}.txt | less -S -x 15"
     try:
         subprocess.run(command, shell=True, check=True)
         save_output = input("Do you want to save the gene information to a file? (y/n): ").strip().lower()
         
         if save_output == "n":
-            os.remove(f"{save_fle}/{gene_name}.txt")
-            sys.exit("Gene information not saved")
+            os.remove(f"{save_file}/{gene_name}.txt")
+            print("Gene information not saved")
         else:            
-            print(f"Gene information saved to {save_fle}/{gene_name}.txt")
+            print(f"Gene information saved to {save_file}/{gene_name}.txt")
     
     except subprocess.CalledProcessError as e:
         sys.exit(f"An error occurred while executing the command: {e}")
