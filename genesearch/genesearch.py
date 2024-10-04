@@ -31,7 +31,7 @@ def main():
             os.remove(f"{save_fle}/{gene_name}.txt")
             sys.exit("Gene information not saved")
         else:            
-        print(f"Gene information saved to {save_fle}/{gene_name}.txt")
+            print(f"Gene information saved to {save_fle}/{gene_name}.txt")
     
     except subprocess.CalledProcessError as e:
         sys.exit(f"An error occurred while executing the command: {e}")
