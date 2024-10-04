@@ -29,7 +29,7 @@ def main():
         
         if save_output == "n":
             os.remove(f"{save_fle}/{gene_name}.txt")
-            sys.exit("Gene information not saved")
+            print("Gene information not saved")
         else:            
             print(f"Gene information saved to {save_fle}/{gene_name}.txt")
     
