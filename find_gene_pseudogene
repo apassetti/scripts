@@ -2,5 +2,5 @@
 gunzip -c data/gencode.v46.annotation.gff3.gz | grep -v "#" | awk '$3 == "gene" && $9 ~ "CFTR"' | tee CFTR.txt |less -S -x 15
 
 #To find strictly the named gene (APC resulted in many other genes not related to it)
-gunzip -c data/gencode.v46.annotation.gff3.gz | grep -v "#" | awk '$3 == "gene" && $9 ~ / \bAPC\b /' | tee APC.txt |less -S -x 15
+gunzip -c gencode.v46.annotation.gff3.gz | grep -v "#" | awk '$3 == "gene" && $9 ~ "gene_name=CFTR"' | less -S -x 15
 
