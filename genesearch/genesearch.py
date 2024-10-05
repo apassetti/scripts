@@ -10,9 +10,6 @@ home_dir = os.path.expanduser("~")
 ref_file = "gencode.v46.primary_assembly.annotation.gff3.gz"
 save_file = os.path.join(home_dir, "Genes")
 
-# Check if reference file exists
-if not os.path.isfile(ref_file):
-    command = f"wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/{ref_file}"
 
 # Create save directory if it does not exist
 if not os.path.exists(save_file):
@@ -22,7 +19,11 @@ if not os.path.exists(save_file):
 def main():
     # Check if reference file exists
     if not os.path.isfile(ref_file):
-        sys.exit(f"Reference file {ref_file} does not exist")
+        command = f"wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/{ref_file}"
+        try:
+            subprocess.run(command, shell=True, check=True)
+        except subprocess.CalledProcessError as e:
+            sys.exit(f"An error occurred while downloading the reference file: {e}")
 
     # Ask for gene name
     gene_name = input("Enter gene name: ").strip().upper()
@@ -54,3 +55,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+else:
+    sys.exit("Goodbye!")
