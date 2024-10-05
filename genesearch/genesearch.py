@@ -33,7 +33,7 @@ def main():
         save_output = input("Do you want to save the gene information to a file? (y/n): ").strip().lower()
         
         if save_output == "n":
-            os.remove(f"{save_fle}/{gene_name}.txt")
+            os.remove(f"{save_file}/{gene_name}.txt")
             sys.exit("Gene information not saved")
         else:            
             print(f"Gene information saved to {save_file}/{gene_name}.txt")
