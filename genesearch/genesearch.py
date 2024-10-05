@@ -10,7 +10,7 @@ home_dir = os.path.expanduser("~")
 ref_file = "gencode.v46.primary_assembly.annotation.gff3.gz"
 save_file = os.path.join(home_dir, "Genes")
 
-# Check if reference file existsù
+# Check if reference file exists
 if not os.path.isfile(ref_file):
     command = f"wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/{ref_file}"
 
