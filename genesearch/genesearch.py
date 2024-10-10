@@ -7,7 +7,7 @@ import shlex
 
 # Define reference and input files
 home_dir = os.path.expanduser("~")
-ref_file = "gencode.v46.primary_assembly.annotation.gff3.gz"
+ref_file = "gencode.v46.primary_assembly.annotation.gtf.gz"
 save_file = os.path.join(home_dir, "Genes")
 
 
