@@ -32,7 +32,7 @@ def main():
         sys.exit("Gene name cannot be empty")
 
     # Execute bash command
-    command = f"gunzip -c {shlex.quote(ref_file)} | grep -v '#' | awk '$3 == \"gene\" && $9 ~ \"gene_name={gene_name}\"' | sort -t ';' -k4,4V | tee {shlex.quote(save_file)}/{shlex.quote(gene_name)}.txt | less -S -x 15"
+    command = f"gunzip -c {shlex.quote(ref_file)} | grep -v '^#' | awk '$3 == \"gene\" && $9 ~ \"gene_name={gene_name}\"' | sort -t ';' -k4,4V | tee {shlex.quote(save_file)}/{shlex.quote(gene_name)}.txt | less -S -x 15"
     try:
         subprocess.run(command, shell=True, check=True)
         save_output = input("Do you want to save the gene information to a file? (y/n): ").strip().lower()
