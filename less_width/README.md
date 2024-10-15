@@ -1,3 +1,9 @@
+# Script
+
+widths=$(head -n 1 Dataset_S1.txt | awk -F, '{for (i=1; i<=NF; i++) print length($i)}' | paste -sd, -)
+
+sed 's/,/\t/g' Dataset_S1.txt | column -ts $'\t' -c $widths | less -S
+
 # Explanation:
 
 - head -n 1 Dataset_S1.txt: Extracts the first row of the file.
