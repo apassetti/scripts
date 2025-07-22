@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from transformers import pipeline
 from fpdf import FPDF
+import os
 
 # Hide the root window and ask for a PDF file
 root = tk.Tk()
@@ -24,8 +25,12 @@ else:
                 if page_text:
                     text += page_text + "\n"
         
+        # Check if the folder exists, then create if it doesn't
+        output_dir = "/Users/andreapassetti/tmp/Supramolecular"
+        os.makedirs(output_dir, exist_ok=True)
+        
         # Save extracted text to a new PDF with Unicode support in ~/tmp folder
-        output_pdf_path = "/Users/andreapassetti/tmp/summary_output.pdf"
+        output_pdf_path = os.path.join(output_dir, "summary_output.pdf")
         pdf_writer = FPDF()
         pdf_writer.add_page()
         pdf_writer.set_auto_page_break(auto=True, margin=15)
