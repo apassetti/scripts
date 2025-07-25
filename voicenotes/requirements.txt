@@ -1,0 +1,3 @@
+pdfplumber
+ollama
+edge-tts
