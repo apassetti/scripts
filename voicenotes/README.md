@@ -49,9 +49,3 @@ You can modify these settings in the code:
 - **Voice**: Change `voice="en-US-AriaNeural"` to use different voices
 - **Speed**: Adjust `rate="+20%"` to change speech speed
 - **Chunk size**: Modify `max_chars=8000` in `split_text_for_audio()` for different audio segment lengths
-
-## Limitations Solved
-
-- **10-minute audio limit**: The app now automatically splits long texts into multiple audio segments and combines them seamlessly
-- **Large PDF handling**: Text is processed in chunks to handle memory efficiently
-- **Real-time feedback**: Progress bars and status updates throughout the process
